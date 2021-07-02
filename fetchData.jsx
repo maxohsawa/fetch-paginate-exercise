@@ -7,7 +7,7 @@ const Pagination = ({ items, pageSize, onPageChange }) => {
     }
   
     let numPages = Math.ceil(items.length / pageSize);
-    let pageRange = range(1, numPages + 1);
+    let pageRange = range(1, numPages);
     
     const list = pageRange.map( (page) => {
       return (
@@ -103,15 +103,15 @@ const Pagination = ({ items, pageSize, onPageChange }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 10;
     const [{ data, isLoading, isError }, doFetch] = useDataApi(
-      'https://hn.algolia.com/api/v1/search?query=MIT',
+      './data.json',
       {
-        hits: [],
+        facts: [],
       }
     );
     const handlePageChange = (e) => {
       setCurrentPage(Number(e.target.textContent));
     };
-    let page = data.hits;
+    let page = data.facts;
     if (page.length >= 1) {
       page = paginate(page, currentPage, pageSize);
       console.log(`currentPage: ${currentPage}`);
@@ -123,15 +123,15 @@ const Pagination = ({ items, pageSize, onPageChange }) => {
         ) : (
           // Part 1, step 2 code goes here
           <ul className="list-group">
-            {page.map((item) => (
-              <li className="list-group-item" key={item.objectID}>
-                <a href={item.url}>{item.title}</a>
+            {page.map((item, index) => (
+              <li className="list-group-item" key={index}>
+                <p>{item.fact}</p>
               </li>
             ))}
           </ul>
         )}
         <Pagination
-          items={data.hits}
+          items={data.facts}
           pageSize={pageSize}
           onPageChange={handlePageChange}
         ></Pagination>
